@@ -1,0 +1,5 @@
+# Ignore regularly updating files
+geany/.config/geany/session.conf
+mpv/.config/mpv/#.oth/scripts-bkp/webtorrent-hook
+mpv/.config/mpv/scripts/file-browser
+mpv/.config/mpv/scripts/user-input
