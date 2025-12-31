@@ -217,3 +217,4 @@ alias cat="bat"
 export PATH=$PATH:/home/uzuto/.spicetify
 
 alias droid="WAYLAND_DISPLAY=wayland-1 && weston --shell="kiosk-shell.so" --fullscreen --width=1920 --height=1080  -- waydroid show-full-ui && waydroid session stop"
+alias igpuhdmi="xrandr --setprovideroutputsource 1 0 && xrandr --auto"
