@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Get current mode
+CURRENT_MODE=$(supergfxctl -g | awk '{print $NF}')
+TARGET_MODE="Hybrid"
+[ "$CURRENT_MODE" == "Hybrid" ] && TARGET_MODE="Integrated"
+
+# Check if we are in a graphical environment and have zenity
+if [ -n "$DISPLAY" ] && command -v zenity &> /dev/null; then
+    zenity --question \
+        --title="Graphics Switch" \
+        --text="Current mode: $CURRENT_MODE\nDo you want to switch to $TARGET_MODE?\n\nNote: You may need to log out to apply changes." \
+        --width=300 || exit 0
+else
+    # Terminal fallback
+    read -p "Switch from $CURRENT_MODE to $TARGET_MODE? (y/N): " confirm
+    [[ ! $confirm =~ ^[Yy]$ ]] && exit 0
+fi
+
+# Perform the switch
+echo "Switching to $TARGET_MODE..."
+supergfxctl -m "$TARGET_MODE"
+
+# Notify the user
+if command -v notify-send &> /dev/null; then
+    notify-send "GPU Mode Switch Initiated" "Switched to $TARGET_MODE. Please restart your session if needed." -i video-display
+fi
