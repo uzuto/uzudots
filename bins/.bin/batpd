@@ -1,0 +1,48 @@
+#!/bin/bash
+# Monitors discharge rate, time, and GPU state with clear separation
+
+# Find the active battery folder
+if [ -d "/sys/class/power_supply/BAT1" ]; then
+    BAT_PATH="/sys/class/power_supply/BAT1"
+else
+    BAT_PATH="/sys/class/power_supply/BAT0"
+fi
+
+# Find GPU path (Standard for most laptops)
+GPU_PATH="/sys/bus/pci/devices/0000:01:00.0/power/runtime_status"
+
+while true; do
+    clear
+    echo "--- Enhanced Power Monitor ---"
+    
+    STATUS=$(cat "$BAT_PATH/status")
+    VOLT=$(cat "$BAT_PATH/voltage_now")
+    CURR=$(cat "$BAT_PATH/current_now")
+    
+    # Calculate Wattage
+    WATTS=$(echo "scale=2; ($VOLT * $CURR) / 1000000000000" | bc)
+    
+    # Get GPU State
+    if [ -f "$GPU_PATH" ]; then
+        GPU_STATE=$(cat "$GPU_PATH")
+    else
+        GPU_STATE="disconnected"
+    fi
+    
+    echo "Battery Status : $STATUS"
+    echo "Discharge Rate : $WATTS Watts"
+    echo "NVIDIA GPU     : $GPU_STATE"
+    
+    echo "------------------------------"
+
+    # Verdict Logic
+    if [ "$GPU_STATE" = "suspended" ] || [ "$GPU_STATE" = "disconnected" ]; then
+        echo "Verdict: [OPTIMAL] NVIDIA is Off."
+    elif [ "$STATUS" = "Charging" ]; then
+        echo "Verdict: [CHARGING] Drawing wall power."
+    else
+        echo "Verdict: [WARNING] High draw - GPU is ACTIVE."
+    fi
+
+    sleep 2
+done
