@@ -1,5 +1,5 @@
 #!/bin/bash
-# Monitors discharge rate, time, and GPU state with clear separation
+# Monitors discharge rate, time remaining (Charge-based), and GPU state
 
 # Find the active battery folder
 if [ -d "/sys/class/power_supply/BAT1" ]; then
@@ -8,41 +8,59 @@ else
     BAT_PATH="/sys/class/power_supply/BAT0"
 fi
 
-# Find GPU path (Standard for most laptops)
+# Find GPU path
 GPU_PATH="/sys/bus/pci/devices/0000:01:00.0/power/runtime_status"
 
 while true; do
     clear
     echo "--- Enhanced Power Monitor ---"
+    echo
     
     STATUS=$(cat "$BAT_PATH/status")
-    VOLT=$(cat "$BAT_PATH/voltage_now")
-    CURR=$(cat "$BAT_PATH/current_now")
+    VOLT=$(cat "$BAT_PATH/voltage_now")    # Microvolts
+    CURR=$(cat "$BAT_PATH/current_now")    # Microamps
     
-    # Calculate Wattage
-    WATTS=$(echo "scale=2; ($VOLT * $CURR) / 1000000000000" | bc)
+    # Try to get Charge instead of Energy
+    if [ -f "$BAT_PATH/charge_now" ]; then
+        CHARGE=$(cat "$BAT_PATH/charge_now") # Microamp-hours
+    else
+        CHARGE=0
+    fi
+    
+    # Calculate Wattage (P = V * I)
+    WATTS=$(echo "scale=2; ($VOLT * $CURR) / 1000000000000" | bc -l)
+    
+    # Calculate Time Remaining (Hours = Charge / Current)
+    if [ "$STATUS" = "Discharging" ] && [ "$CURR" -gt 0 ]; then
+        TIME_HOURS=$(echo "scale=2; $CHARGE / $CURR" | bc -l)
+        
+        # Convert decimal hours to Hours and Minutes
+        H=$(echo "$TIME_HOURS / 1" | bc)
+        M=$(echo "($TIME_HOURS - $H) * 60 / 1" | bc)
+        TIME_STR="${H}h ${M}m"
+    elif [ "$STATUS" = "Charging" ] && [ "$CURR" -gt 0 ] && [ -f "$BAT_PATH/charge_full" ]; then
+        # Optional: Calculate time to full charge
+        FULL=$(cat "$BAT_PATH/charge_full")
+        NEEDED=$(echo "$FULL - $CHARGE" | bc)
+        TIME_HOURS=$(echo "scale=2; $NEEDED / $CURR" | bc -l)
+        H=$(echo "$TIME_HOURS / 1" | bc)
+        M=$(echo "($TIME_HOURS - $H) * 60 / 1" | bc)
+        TIME_STR="Full in ${H}h ${M}m"
+    else
+        TIME_STR="N/A"
+    fi
     
     # Get GPU State
     if [ -f "$GPU_PATH" ]; then
         GPU_STATE=$(cat "$GPU_PATH")
     else
-        GPU_STATE="disconnected"
+        GPU_STATE="disconnected/blacklisted"
     fi
     
     echo "Battery Status : $STATUS"
     echo "Discharge Rate : $WATTS Watts"
+    echo "Time Remaining : $TIME_STR"
     echo "NVIDIA GPU     : $GPU_STATE"
-    
-    echo "------------------------------"
-
-    # Verdict Logic
-    if [ "$GPU_STATE" = "suspended" ] || [ "$GPU_STATE" = "disconnected" ]; then
-        echo "Verdict: [OPTIMAL] NVIDIA is Off."
-    elif [ "$STATUS" = "Charging" ]; then
-        echo "Verdict: [CHARGING] Drawing wall power."
-    else
-        echo "Verdict: [WARNING] High draw - GPU is ACTIVE."
-    fi
 
     sleep 2
 done
