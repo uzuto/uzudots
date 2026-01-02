@@ -1,21 +1,13 @@
 #!/bin/bash
 
-# 1. Get snapshot of existing IDs (suppress errors if none exist)
 OLD_IDS=$(xdotool search --class "Alacritty" 2>/dev/null | sort)
-
-# 2. Launch the new terminal
 alacritty &
 
-# 3. Try to find the specific new window
 for i in {1..20}; do
-    # Get current window IDs
     CURRENT_IDS=$(xdotool search --class "Alacritty" 2>/dev/null | sort)
-    
-    # Identify the ID that is in CURRENT but not in OLD
     NEW_ID=$(comm -13 <(echo "$OLD_IDS") <(echo "$CURRENT_IDS") | head -n 1)
 
     if [ -n "$NEW_ID" ]; then
-        # New window found! Wait for it to map and force focus.
         sleep 0.15
         xdotool windowactivate "$NEW_ID"
         xdotool windowraise "$NEW_ID"
@@ -24,8 +16,6 @@ for i in {1..20}; do
     sleep 0.1
 done
 
-# 4. FALLBACK: If no new window appeared after 2 seconds,
-# focus the most recent existing terminal instead.
 LAST_EXISTING=$(xdotool search --class "Alacritty" | tail -1)
 if [ -n "$LAST_EXISTING" ]; then
     xdotool windowactivate "$LAST_EXISTING"
