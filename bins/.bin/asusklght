@@ -1,4 +1,6 @@
 #!/bin/env bash
+
+# Uses hyprpicker (hyprutils)
 raw_color=$(hyprpicker)
 color="${raw_color//#/}"
 asusctl aura static -c $color
