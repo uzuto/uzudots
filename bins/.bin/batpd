@@ -54,13 +54,13 @@ while true; do
     if [ -f "$GPU_PATH" ]; then
         GPU_STATE=$(cat "$GPU_PATH")
     else
-        GPU_STATE="disconnected/blacklisted"
+        GPU_STATE="off"
     fi
     
     echo "Battery Status : $STATUS"
     echo "Discharge Rate : $WATTS Watts"
     echo "Time Remaining : $TIME_STR"
-    echo "NVIDIA GPU     : $GPU_STATE"
+    echo "dGPU Status    : $GPU_STATE"
 
     sleep 2
 done
