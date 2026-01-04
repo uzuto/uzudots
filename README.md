@@ -13,5 +13,6 @@ Checklist
 - [x] Resolved HiDPI issue with xsettingsd
 - [x] **stow** friendly for easy installation
 - [x] Added stowrc
+- [ ] Add Alacritty config
 
 Note: Remove any previous folders before stowing. It will have conflicts
