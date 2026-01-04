@@ -203,7 +203,7 @@ alias stopsmb="sudo systemctl stop smb nmb"
 # hardware related
 
 # disable wifikill when lid close (disable sleep first)
-alias wifinokill="sudo setkeycodes e057 240 e058 240"
+# alias wifinokill="sudo setkeycodes e057 240 e058 240"  # For HP15s (old setup) not required on ASUS TUF A15 anymore
 
 #screen off
 alias screendown='xset -display :0.0 dpms force off'
