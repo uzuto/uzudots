@@ -147,6 +147,7 @@ alias lg='ls -l --group-directories-first'
 
 # git
 alias gcl='git clone --depth 1'
+alias gs='git status'
 alias gi='git init'
 alias ga='git add'
 alias gc='git commit -m'
