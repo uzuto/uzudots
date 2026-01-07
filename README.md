@@ -14,5 +14,6 @@ Checklist
 - [x] **stow** friendly for easy installation
 - [x] Added stowrc
 - [ ] Add Alacritty config
+- [ ] Re-configure mpv for TUF's hardware
 
 Note: Remove any previous folders before stowing. It will have conflicts
