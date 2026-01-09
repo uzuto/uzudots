@@ -1,19 +1,12 @@
-# bspconf-stow
+# uzudots
 
-My Personal **BSPWM** dotfiles
+My **dotfiles**
 
-installation:
+Usage:
 
 `echo "--target=~">>~/.stowrc`\
-`git clone https:/github.com/uzuto/bspconf-stow && cd bspconf-stow && stow -t */`
+`git clone https:/github.com/uzuto/uzudots && cd uzudots && stow -t */`
 
 Checklist
 
-- [x] Updated to 1920x1080
-- [x] Resolved HiDPI issue with xsettingsd
-- [x] **stow** friendly for easy installation
-- [x] Added stowrc
-- [ ] Add Alacritty config
-- [ ] Re-configure mpv for TUF's hardware
-
-Note: Remove any previous folders before stowing. It will have conflicts
+- [ ] A lot of stuff 
