@@ -1,0 +1,28 @@
+[cursor]
+unfocused_hollow = false
+
+[cursor.style]
+blinking = "On"
+shape = "Block"
+
+[env]
+TERM = "alacritty"
+WINIT_X11_SCALE_FACTOR = "1.4"
+
+[window]
+decorations = "full"
+dynamic_title = true
+opacity = 0.9
+startup_mode = "Fullscreen"
+
+[window.dimensions]
+columns = 100
+lines = 27
+
+[window.padding]
+x = 20
+y = 20
+
+[general]
+live_config_reload = true
+import = ["/home/uzuto/.config/alacritty/culur.toml", "/home/uzuto/.config/alacritty/fonts.toml"]
