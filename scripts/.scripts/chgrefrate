@@ -1,0 +1,7 @@
+#!/bin/bash
+ON_BATTERY=$(cat /sys/class/power_supply/ACAD/online)
+if [ "$ON_BATTERY" -eq 0 ]; then
+    xrandr --output eDP --mode 1920x1080 --rate 60.00
+else
+    xrandr --output eDP --mode 1920x1080 --rate 144.00
+fi
