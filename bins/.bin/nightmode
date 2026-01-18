@@ -1,0 +1,11 @@
+#!/bin/bash
+
+STATE_FILE="/tmp/sct_state"
+
+if [ ! -f "$STATE_FILE" ]; then
+    sct 2500
+    echo "night" > "$STATE_FILE"
+else
+    sct
+    rm "$STATE_FILE"
+fi
