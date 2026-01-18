@@ -4,3 +4,5 @@ mpv/.config/mpv/#.oth/scripts-bkp/webtorrent-hook
 mpv/.config/mpv/scripts/file-browser
 mpv/.config/mpv/scripts/user-input
 zsh/.oh-my-zsh/cache/
+ranger/.config/ranger/plugins
+ranger/.config/ranger/colorschemes/
