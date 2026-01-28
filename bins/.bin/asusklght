@@ -1,5 +1,6 @@
 #!/bin/env bash
 
+#todo: for configure x11 using yad or gpick
 # Uses hyprpicker (hyprutils)
 raw_color=$(hyprpicker)
 color="${raw_color//#/}"
